@@ -11,7 +11,17 @@
 
 <body>
   <div id="root"></div>
-  <script type="module" src="/src/main.jsx"></script>
+    <footer>
+      <h6>
+        <span>©</span> <span id="year"></span> Todos los derechos reservados • Built with HTML5, CSS3, JavaScript, React • Database powered by Firebase • Deployed on Vercel ®
+      </h6>
+    </footer>
+    <script type="module" src="/src/main.jsx">
+      
+    </script>
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
 </body>
 
 </html>
