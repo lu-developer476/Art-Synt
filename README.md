@@ -52,7 +52,7 @@ npm run build
 npm run firebase:deploy:hosting
 ```
 
-> Nota: ahora la configuración de Firebase está en la raíz (`firebase.json` y `.firebaserc`) para que Firebase CLI detecte automáticamente el proyecto correcto.
+> Nota: el deploy quedó fijado al proyecto `art-synt-13037` y al sitio de Hosting `art-synt-13037` usando target `production` en `firebase.json/.firebaserc`, para evitar publicar por error en otro site.
 
 ## Firestore sugerido
 
@@ -96,25 +96,18 @@ Campos por documento:
 1. Iniciá sesión en Firebase CLI:
 
 ```bash
-firebase login
+npx firebase-tools login
 ```
 
-2. Verificá que estés en el proyecto correcto:
+2. Generá el build y desplegá Hosting al target correcto (`production` → `art-synt-13037`):
 
 ```bash
-firebase use
-```
-
-Debe mostrar `art-synt-13037` (se define por defecto en `.firebaserc`).
-
-3. Generá el build y desplegá Hosting:
-
-```bash
+npm install
 npm run build
 npm run firebase:deploy:hosting
 ```
 
-4. Si querés subir reglas/índices de Firestore también:
+3. Si querés subir reglas/índices de Firestore también:
 
 ```bash
 npm run firebase:deploy:firestore
@@ -146,10 +139,9 @@ Seguí este checklist en orden:
 4. **Deploy de Hosting (primer release)**
 
    ```bash
+   npx firebase-tools login
    npm install
    npm run build
-   firebase login
-   firebase use art-synt-13037
    npm run firebase:deploy:hosting
    ```
 
@@ -161,10 +153,10 @@ Seguí este checklist en orden:
 ### Errores típicos y cómo corregirlos
 
 - **Deploy successful pero sigue "Site Not Found"**
-  - Revisá que no estés desplegando en otro proyecto (`firebase use`).
-  - Forzá proyecto en el comando:
+  - Verificá que el deploy vaya al target `production` (site `art-synt-13037`) y no a otro sitio del proyecto.
+  - Ejecutá explícitamente:
     ```bash
-    firebase deploy --only hosting --project art-synt-13037
+    npx firebase-tools deploy --only hosting:production --project art-synt-13037
     ```
 
 - **Deploy de carpeta vacía**
@@ -174,3 +166,24 @@ Seguí este checklist en orden:
 - **Pantalla en blanco después del deploy**
   - Revisá errores de JS en consola del navegador.
   - Confirmá que el `firebaseConfig` apunte al mismo proyecto (`art-synt-13037`) y que Firestore/Auth estén habilitados.
+
+### Si falla con `firebase: not found`
+
+El repo ahora ejecuta Firebase CLI con `npx firebase-tools` en los scripts de `package.json`, así no depende de tener `firebase` global instalado.
+
+Si tu entorno bloquea `npx`, instalá Firebase CLI de forma global y volvé a ejecutar:
+
+```bash
+npm install -g firebase-tools
+```
+
+
+## Verificación rápida del target de Hosting
+
+Ejecutá este comando para confirmar que el target `production` está mapeado al site correcto:
+
+```bash
+npx firebase-tools target:apply hosting production art-synt-13037 --project art-synt-13037
+```
+
+> Si responde que el target ya existe, está bien: significa que `hosting:production` apunta al sitio correcto.
