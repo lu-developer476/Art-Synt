@@ -176,6 +176,7 @@ Si tu entorno bloquea `npx`, instalá Firebase CLI de forma global y volvé a ej
 ```bash
 npm install -g firebase-tools
 ```
+codex/find-config.ts-setup-options-hu10ak
 
 
 ## Verificación rápida del target de Hosting
@@ -183,42 +184,8 @@ npm install -g firebase-tools
 Ejecutá este comando para confirmar que el target `production` está mapeado al site correcto:
 
 ```bash
-npx firebase-tools target:apply hosting production art-syntex --project art-syntex
+npx firebase-tools target:apply hosting production art-synt-13037 --project art-synt-13037
 ```
 
 > Si responde que el target ya existe, está bien: significa que `hosting:production` apunta al sitio correcto.
-
-
-## Reinicializar proyecto nuevo (Art-Syntex)
-
-Como borraste el proyecto anterior, para que todo vuelva a funcionar hacé este orden:
-
-1. **Authentication**
-   - Firebase Console → Authentication → Sign-in method.
-   - Activá `Email/Password`.
-   - Si usás GitHub, en GitHub OAuth App cargá este callback exactamente:
-
-   ```
-   https://art-syntex.firebaseapp.com/__/auth/handler
-   ```
-
-2. **Firestore Database**
-   - Firebase Console → Firestore Database → Crear base de datos.
-   - Elegí región (recomendado la misma que tenías en tu backend) y modo inicial.
-   - Publicá reglas/índices del repo:
-
-   ```bash
-   npm run firebase:deploy:firestore
-   ```
-
-3. **Hosting**
-   - Build + primer deploy:
-
-   ```bash
-   npm run build
-   npm run firebase:deploy:hosting
-   ```
-
-4. **Verificación**
-   - Abrí: `https://art-syntex.web.app`
-   - Si ves versión publicada en Hosting, el problema de *Site Not Found* quedó resuelto.
+main
