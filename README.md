@@ -1,4 +1,4 @@
-# Art-Syntex — Cyberware Store (Portfolio Ready)
+# Art-Syntex
 
 E-commerce conceptual estilo cyberpunk construido con **React + TypeScript + Tailwind + Firebase**.
 
