@@ -21,12 +21,11 @@ export default function HeroSection() {
         </h1>
 
         <p className="mt-4 max-w-3xl text-base text-purple-100/90 md:text-lg">
-          <em>"No vendemos piezas: forjamos ventaja humana en cada conexión neural."</em>
+          <em>"Forjamos ventajas humanas con nuestras conexiones"</em>
         </p>
 
         <p className="mt-4 max-w-3xl text-base text-purple-200 md:text-lg">
-          Acá cada mejora entra como una decisión íntima: calibrada para tu ritmo, tu riesgo y tu
-          forma de atravesar la ciudad cuando todo vibra al límite.
+          Cada mejora calibrada para tu ritmo, tu riesgo y tu forma de atravesar la ciudad cuando todo vibra al límite.
         </p>
 
         <nav className="mt-7 flex flex-wrap gap-3" aria-label="Navegación interna">
