@@ -1,14 +1,5 @@
 {
   "projects": {
-        codex/find-config.ts-setup-options
-    "default": "art-syntex"
-  },
-  "targets": {
-    "art-syntex": {
-      "hosting": {
-        "production": [
-          "art-syntex"
-=======
     "default": "art-synt-13037"
   },
   "targets": {
@@ -16,7 +7,6 @@
       "hosting": {
         "production": [
           "art-synt-13037"
-        main
         ]
       }
     }
