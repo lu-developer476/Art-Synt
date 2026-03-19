@@ -11,7 +11,7 @@
 ![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
 ![Nodemailer](https://img.shields.io/badge/Nodemailer-009688?style=for-the-badge)
 
-Art-Syntex es una SPA con estética cyberpunk orientada a catálogo, acceso de usuarios y flujo básico de compra. El frontend corre sobre React + Vite y usa Firebase como backend gestionado para autenticación, catálogo y persistencia de datos.
+Art-Syntex (A/S Nexus) es una SPA con estética cyberpunk orientada a catálogo, acceso de usuarios y flujo básico de compra. El frontend corre sobre React + Vite y usa Firebase como backend gestionado para autenticación, catálogo y persistencia de datos.
 
 ## Estado real del proyecto
 
@@ -40,18 +40,7 @@ El repositorio incluye un backend Node.js separado en `server/index.js` con:
 - **CORS**
 - **Nodemailer**
 
-Ese servidor ofrece:
-
-- `GET /health`
-- `POST /send`
-
-Su propósito es recibir mensajes y reenviarlos por email usando credenciales SMTP/Gmail definidas en variables de entorno.
-
-> **Importante:** hoy ese backend Express **no está integrado activamente con el frontend**. La app cliente no hace `fetch` ni llamadas HTTP a `/send`; en su lugar escribe directamente en Firebase (`contactMessages`, `mail`, `notifications`, `purchaseOrders`, etc.). Si querés usar el servidor Express para contacto, hoy haría falta conectar explícitamente el frontend a ese endpoint.
-
-## Qué hace realmente la aplicación
-
-Actualmente el frontend implementa estas capacidades:
+## Actualmente el frontend:
 
 - Carga el catálogo desde **Firestore**.
 - Si la colección `products` está vacía, hace un **seed automático** con los datos de `src/data/products.ts`.
@@ -137,7 +126,7 @@ server/
 
 ### Frontend (`.env`)
 
-Creá un archivo `.env` a partir de `.env.example`:
+Crear un archivo `.env` a partir de `.env.example`:
 
 ```bash
 cp .env.example .env
@@ -156,8 +145,6 @@ VITE_FIREBASE_APP_ID=
 
 ### Backend Express opcional
 
-Si querés correr el servidor de correo localmente, además necesitás estas variables en tu entorno:
-
 ```env
 EMAIL_USER=
 EMAIL_PASS=
@@ -168,8 +155,8 @@ PORT=3001
 Notas:
 
 - `EMAIL_USER` y `EMAIL_PASS` son obligatorias para que el servidor arranque.
-- `ALLOWED_ORIGIN` restringe CORS si querés permitir solo un origen concreto.
-- Estas variables **no** son necesarias para levantar el frontend si no vas a usar el backend Express.
+- `ALLOWED_ORIGIN` restringe CORS para permitir solo un origen concreto.
+- Estas variables **no** son necesarias para levantar el frontend si no se usa el backend Express.
 
 ## Cómo correr el proyecto localmente
 
@@ -181,14 +168,14 @@ Notas:
 npm install
 ```
 
-2. Configurá `.env` con tus credenciales de Firebase.
+2. Configurar `.env` con tus credenciales de Firebase.
 
-3. Verificá en Firebase Console que estén habilitados:
+3. Verificar en Firebase Console que estén habilitados:
 
 - Authentication > Email/Password
 - Firestore Database
 
-4. Iniciá el frontend:
+4. Iniciar el frontend:
 
 ```bash
 npm run dev
@@ -204,7 +191,7 @@ Si además querés levantar el servidor Express incluido en el repo:
 npm run server
 ```
 
-Por defecto escucha en `http://localhost:3001`.
+Por defecto: `http://localhost:3001`.
 
 > Levantar este servidor no cambia el comportamiento del frontend actual por sí solo. Para usarlo desde la interfaz habría que integrar llamadas al endpoint `POST /send`.
 
@@ -232,19 +219,19 @@ npm run preview
 
 ### Frontend en Firebase Hosting
 
-1. Instalá dependencias:
+1. Instalar dependencias:
 
 ```bash
 npm install
 ```
 
-2. Generá el build:
+2. Generar el build:
 
 ```bash
 npm run build
 ```
 
-3. Desplegá Hosting:
+3. Desplegar Hosting:
 
 ```bash
 npm run firebase:deploy:hosting
@@ -268,17 +255,6 @@ Si querés desplegar Hosting y Firestore en un mismo paso:
 npm run firebase:deploy
 ```
 
-## Qué NO hace hoy el proyecto
-
-Para que el README sea fiel al estado actual, conviene dejar explícito lo que **no** está implementado o no está conectado:
-
-- No hay integración activa entre el frontend y el servidor Express.
-- No hay backend API principal para catálogo, auth o compras: esos flujos van directo a Firebase desde el cliente.
-- No hay pasarela de pago real.
-- No hay panel administrativo en este repo.
-- No hay SSR ni framework full-stack; es una SPA de Vite.
-- No hay evidencia en este repositorio de deploy del backend Express a un proveedor específico.
-
 ## Scripts disponibles
 
 ```bash
@@ -293,13 +269,7 @@ npm run firebase:deploy:hosting
 
 ## Configuración de Firebase recomendada
 
-Para que el proyecto funcione como está implementado hoy:
-
-1. Habilitá **Email/Password** en Firebase Authentication.
-2. Creá Firestore Database.
-3. Publicá las reglas e índices incluidos en el repo.
-4. Si querés procesar la colección `mail`, configurá del lado de Firebase la integración/extensión correspondiente; este repo solo crea los documentos.
-
-## Licencia
-
-Este repositorio no declara actualmente un archivo `LICENSE` en la raíz. Si necesitás una licencia explícita para distribución o uso, conviene agregarla.
+1. Habilitar **Email/Password** en Firebase Authentication.
+2. Crear Firestore Database.
+3. Publica las reglas e índices incluidos en el repo.
+4. Para procesar la colección `mail`, configurar del lado de Firebase la integración/extensión correspondiente.
