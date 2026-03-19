@@ -28,7 +28,7 @@ export default function HeroSection() {
           Implantes y mejoras calibrados para tu ritmo, tu nivel de exigencia y la forma en que te movés cuando la ciudad empuja al límite.
         </p>
 
-        <nav className="mt-7 flex flex-wrap gap-3" aria-label="Navegación interna">
+        <nav className="mt-7 flex flex-wrap gap-3" aria-label="Secciones principales">
           <Link
             to="/acceso"
             className="rounded-lg bg-gradient-to-r from-purple-700 to-slate-500 px-4 py-2 text-sm font-semibold text-white transition hover:scale-[1.03]"

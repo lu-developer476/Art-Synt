@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 import AccessSection from '../components/home/AccessSection'
 import CartSection from '../components/home/CartSection'
@@ -8,19 +8,17 @@ import { db } from '../firebase/config'
 import { useAuthState } from '../hooks/useAuthState'
 import { useCart } from '../hooks/useCart'
 import { useProducts } from '../hooks/useProducts'
-import { addNotification, type SectionKey } from '../lib/home'
+import { addNotification } from '../lib/home'
 import HeroSection from '../sections/Hero'
 
+type HomeSection = 'acceso' | 'productos' | 'contacto'
+
 interface HomeProps {
-  focusSection?: SectionKey
   showHero?: boolean
-  singleSection?: SectionKey
+  singleSection?: HomeSection
 }
 
-export default function Home({ focusSection, showHero = true, singleSection }: HomeProps) {
-  const accesoRef = useRef<HTMLElement>(null)
-  const productosRef = useRef<HTMLElement>(null)
-  const contactoRef = useRef<HTMLElement>(null)
+export default function Home({ showHero = true, singleSection }: HomeProps) {
 
   const auth = useAuthState()
   const products = useProducts()
@@ -31,17 +29,6 @@ export default function Home({ focusSection, showHero = true, singleSection }: H
   const [contactDescription, setContactDescription] = useState('')
   const [contactMessage, setContactMessage] = useState<string | null>(null)
 
-  useEffect(() => {
-    const map = {
-      acceso: accesoRef,
-      productos: productosRef,
-      contacto: contactoRef,
-    }
-
-    if (focusSection) {
-      map[focusSection].current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-  }, [focusSection])
 
   const handleContactSubmit = async (event: FormEvent) => {
     event.preventDefault()
@@ -83,7 +70,7 @@ export default function Home({ focusSection, showHero = true, singleSection }: H
 
   const sections = {
     acceso: (
-      <section ref={accesoRef} id="acceso" className="scroll-mt-24">
+      <section>
         <AccessSection
           authEmail={auth.authEmail}
           authMessage={auth.authMessage}
@@ -98,7 +85,7 @@ export default function Home({ focusSection, showHero = true, singleSection }: H
       </section>
     ),
     productos: (
-      <section ref={productosRef} id="productos" className="scroll-mt-24 space-y-6">
+      <section className="space-y-6">
         <ProductsSection
           cartTotal={cart.cartTotal}
           error={products.error}
@@ -117,7 +104,7 @@ export default function Home({ focusSection, showHero = true, singleSection }: H
       </section>
     ),
     contacto: (
-      <section ref={contactoRef} id="contacto" className="scroll-mt-24">
+      <section>
         <ContactSection
           contactDescription={contactDescription}
           contactEmail={contactEmail}

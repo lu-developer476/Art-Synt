@@ -7,7 +7,6 @@ export interface CartItem {
   quantity: number
 }
 
-export type SectionKey = 'acceso' | 'productos' | 'contacto'
 
 export const formatPrice = (price: number) =>
   new Intl.NumberFormat('es-AR', {
