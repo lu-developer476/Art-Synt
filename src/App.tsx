@@ -1,35 +1,37 @@
-import { Suspense, lazy } from 'react'
-import { Route, Routes } from 'react-router-dom'
-import Container from './components/Container'
-import MainLayout from './layout/Main'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import Home from './pages/Home'
+import Access from './pages/Access'
+import Products from './pages/Products'
+import Contact from './pages/Contact'
+import Header from './components/Header'
+import Footer from './components/Footer'
 
-const Home = lazy(() => import('./pages/Home'))
-const Access = lazy(() => import('./pages/Access'))
-const Products = lazy(() => import('./pages/Products'))
-const Contact = lazy(() => import('./pages/Contact'))
+function AppContent() {
+  const location = useLocation()
+  const isHome = location.pathname === '/'
 
-export default function App() {
   return (
-    <MainLayout>
-      <Container>
-        <Suspense fallback={<RouteFallback />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/acceso" element={<Access />} />
-            <Route path="/productos" element={<Products />} />
-            <Route path="/contacto" element={<Contact />} />
-          </Routes>
-        </Suspense>
-      </Container>
-    </MainLayout>
+    <div className="min-h-screen bg-black text-white">
+      <Header />
+
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/acceso" element={<Access />} />
+          <Route path="/productos" element={<Products />} />
+          <Route path="/contacto" element={<Contact />} />
+        </Routes>
+      </main>
+
+      {isHome && <Footer />}
+    </div>
   )
 }
 
-function RouteFallback() {
+export default function App() {
   return (
-    <div
-      className="mx-auto min-h-[60vh] max-w-6xl animate-pulse rounded-3xl border border-purple-400/40 bg-black/40"
-      aria-hidden="true"
-    />
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   )
 }
