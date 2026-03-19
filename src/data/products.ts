@@ -1,14 +1,31 @@
+export const productCategories = ['Neural', 'Combat', 'Optics', 'Interface'] as const
+
+export type ProductCategory = (typeof productCategories)[number]
+export type ProductId =
+  | 'sandevistan'
+  | 'disk-ram'
+  | 'mantis-blades'
+  | 'gorilla-arms'
+  | 'facial-cyberware'
+  | 'synaptic-reflector'
+  | 'projectile-ls'
+  | 'kiroshi-optics'
+  | 'atomic-sensors'
+  | 'visual-interface'
+
 export interface Product {
-  id: string
+  id: ProductId
   name: string
   price: number
-  image: string
+  image: `/images/${string}`
   description: string
-  category: 'Neural' | 'Combat' | 'Optics' | 'Interface'
-  featured?: boolean
+  category: ProductCategory
+  featured?: true
 }
 
-export const productsSeed: Product[] = [
+export type ProductSeed = Readonly<Product>
+
+const catalogSeed = [
   {
     id: 'sandevistan',
     name: 'Sandevistan Mk.4',
@@ -63,7 +80,7 @@ export const productsSeed: Product[] = [
     id: 'projectile-ls',
     name: 'Sistema de lanzamiento de proyectiles',
     price: 2800,
-    image: '/images/proyectile-ls.png',
+    image: '/images/projectile-ls.png',
     description: 'Lanzador de proyectiles integrado en brazo con control de trayectoria inteligente.',
     category: 'Combat',
   },
@@ -92,4 +109,22 @@ export const productsSeed: Product[] = [
     description: 'Conecta HUD y comunicaciones en tiempo real con tus implantes principales.',
     category: 'Interface',
   },
-]
+] as const satisfies readonly ProductSeed[]
+
+export const productsSeed: Product[] = catalogSeed.map((product) => ({ ...product }))
+
+export const productsById: ReadonlyMap<ProductId, Product> = new Map(
+  productsSeed.map((product) => [product.id, product]),
+)
+
+export function isProductCategory(value: unknown): value is ProductCategory {
+  return typeof value === 'string' && productCategories.includes(value as ProductCategory)
+}
+
+export function isProductId(value: unknown): value is ProductId {
+  return typeof value === 'string' && productsById.has(value as ProductId)
+}
+
+export function getProductSeedById(id: ProductId): Product {
+  return productsById.get(id) ?? productsSeed.find((product) => product.id === id)!
+}
