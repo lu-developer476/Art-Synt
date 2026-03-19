@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import Home from './pages/Home'
 import Access from './pages/Access'
 import Products from './pages/Products'
@@ -6,7 +6,7 @@ import Contact from './pages/Contact'
 import Header from './components/Header'
 import Footer from './components/Footer'
 
-function AppLayout() {
+export default function App() {
   const location = useLocation()
   const isHome = location.pathname === '/'
 
@@ -25,13 +25,5 @@ function AppLayout() {
 
       {isHome ? <Footer /> : null}
     </div>
-  )
-}
-
-export default function App() {
-  return (
-    <BrowserRouter>
-      <AppLayout />
-    </BrowserRouter>
   )
 }
