@@ -30,7 +30,7 @@ export default function Access() {
     setAuthMessage(null)
 
     if (!authEmail || !authPassword) {
-      setAuthMessage('Ingresá ID y clave para autenticarte.')
+      setAuthMessage('Ingresá tu correo y tu clave para continuar.')
       return
     }
 
@@ -39,14 +39,14 @@ export default function Access() {
       await addNotification('Ingreso exitoso', 'Usuario autenticado en la red', {
         email: credential.user.email ?? authEmail,
       })
-      setAuthMessage('Ingreso correcto. Tu sesión quedó activa en Firebase Auth.')
+      setAuthMessage('Ingreso correcto. Tu sesión ya está activa.')
     } catch (error) {
       if (error instanceof FirebaseError && error.code === 'auth/invalid-credential') {
-        setAuthMessage('Credenciales inválidas. Verificá ID y clave.')
+        setAuthMessage('Credenciales inválidas. Revisá tu correo y tu clave.')
         return
       }
 
-      setAuthMessage('No se pudo ingresar. Revisá la configuración de Authentication en Firebase.')
+      setAuthMessage('No pudimos iniciar tu sesión en este momento.')
     }
   }
 
@@ -54,7 +54,7 @@ export default function Access() {
     setAuthMessage(null)
 
     if (!authEmail.includes('@') || authPassword.length < 6) {
-      setAuthMessage('Usá un ID válido y una clave de al menos 6 caracteres.')
+      setAuthMessage('Usá un correo válido y una clave de al menos 6 caracteres.')
       return
     }
 
@@ -64,20 +64,20 @@ export default function Access() {
         to: [credential.user.email],
         message: {
           subject: 'Bienvenido a la red',
-          text: 'Tu cuenta fue creada correctamente. Ya podés comprar cyberware.',
+          text: 'Tu cuenta fue creada correctamente. Ya podés explorar y comprar nuestras mejoras.',
         },
       })
       await addNotification('Registro completado', 'Nuevo usuario registrado para comprar', {
         email: credential.user.email ?? authEmail,
       })
-      setAuthMessage('Registro exitoso. Authentication y perfil de cliente quedaron operativos.')
+      setAuthMessage('Registro exitoso. Tu perfil ya está listo para operar.')
     } catch (error) {
       if (error instanceof FirebaseError && error.code === 'auth/email-already-in-use') {
-        setAuthMessage('Ese ID ya está registrado. Probá iniciar sesión.')
+        setAuthMessage('Ese correo ya está registrado. Probá iniciar sesión.')
         return
       }
 
-      setAuthMessage('No se pudo registrar. Revisá Authentication/Firestore en Firebase.')
+      setAuthMessage('No pudimos completar el registro. Revisá los datos e intentá de nuevo.')
     }
   }
 
@@ -85,7 +85,7 @@ export default function Access() {
     <section className="mx-auto grid max-w-6xl gap-6 rounded-3xl border border-purple-400/50 bg-gradient-to-br from-purple-950/80 via-black/70 to-slate-900/70 p-6 md:grid-cols-2">
       <div>
         <h2 className="text-2xl font-semibold text-purple-100">Acceso</h2>
-        <p className="mt-2 text-sm text-purple-200">Para operar en nuestra red, valida tu identidad.</p>
+        <p className="mt-2 text-sm text-purple-200">Validá tu identidad para operar en la red.</p>
         {user ? (
           <div className="mt-4 space-y-3 rounded-xl bg-purple-900/40 p-4">
             <p className="text-sm text-purple-100">Sesión activa: {user.email}</p>
@@ -102,7 +102,7 @@ export default function Access() {
 
       <form className="space-y-3" onSubmit={handleSignIn}>
         <label className="block text-sm text-purple-100">
-          ID
+          Correo
           <input
             type="email"
             value={authEmail}

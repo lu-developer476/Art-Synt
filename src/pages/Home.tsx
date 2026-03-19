@@ -58,7 +58,7 @@ export default function Home({ focusSection }: HomeProps) {
         const items = await getOrSeedProducts()
         setProducts(items)
       } catch {
-        setError('No pudimos conectarte a nuestra red. Revisa tus credenciales.')
+        setError('No pudimos conectarte a la red. Revisá tu conexión e intentá de nuevo.')
       } finally {
         setLoading(false)
       }
@@ -99,7 +99,7 @@ export default function Home({ focusSection }: HomeProps) {
     setAuthMessage(null)
 
     if (!authEmail || !authPassword) {
-      setAuthMessage('ID y clave requeridos.')
+      setAuthMessage('Ingresá tu correo y tu clave para continuar.')
       return
     }
 
@@ -108,14 +108,14 @@ export default function Home({ focusSection }: HomeProps) {
       await addNotification('Ingreso exitoso', 'Usuario autenticado en la red', {
         email: credential.user.email ?? authEmail,
       })
-      setAuthMessage('Sesión identificada en la base de datos.')
+      setAuthMessage('Ingreso confirmado. Tu sesión ya está activa.')
     } catch (error) {
       if (error instanceof FirebaseError && error.code === 'auth/invalid-credential') {
-        setAuthMessage('Credenciales incorrectas. Verificar.')
+        setAuthMessage('Credenciales incorrectas. Revisalas e intentá nuevamente.')
         return
       }
 
-      setAuthMessage('Error de ingreso')
+      setAuthMessage('No pudimos iniciar tu sesión en este momento.')
     }
   }
 
@@ -123,7 +123,7 @@ export default function Home({ focusSection }: HomeProps) {
     setAuthMessage(null)
 
     if (!authEmail.includes('@') || authPassword.length < 6) {
-      setAuthMessage('Las credenciales son personales. Por favor, resguardalas.')
+      setAuthMessage('Usá un correo válido y una clave de al menos 6 caracteres.')
       return
     }
 
@@ -133,20 +133,20 @@ export default function Home({ focusSection }: HomeProps) {
         to: [credential.user.email],
         message: {
           subject: 'Bienvenido a la red',
-          text: 'Tu cuenta fue creada correctamente. Estás habilitado para comprar nuestros productos.',
+          text: 'Tu cuenta fue creada correctamente. Ya podés explorar y comprar nuestras mejoras.',
         },
       })
       await addNotification('Registro completado', 'Nuevo usuario registrado para comprar', {
         email: credential.user.email ?? authEmail,
       })
-      setAuthMessage('Registro exitoso. Perfil del cliente operativo.')
+      setAuthMessage('Registro exitoso. Tu perfil ya está listo para operar.')
     } catch (error) {
       if (error instanceof FirebaseError && error.code === 'auth/email-already-in-use') {
-        setAuthMessage('El ID ya está registrado. Se requieren identificadores diferentes.')
+        setAuthMessage('Ese correo ya está registrado. Probá iniciar sesión.')
         return
       }
 
-      setAuthMessage('No se pudo registrar. Revisa tus credenciales.')
+      setAuthMessage('No pudimos completar el registro. Revisá los datos e intentá de nuevo.')
     }
   }
 
@@ -164,25 +164,25 @@ export default function Home({ focusSection }: HomeProps) {
 
   const handleConfirmPurchase = async () => {
     if (!user || cart.length === 0) {
-      setAuthMessage('El derecho a comprar está restringido a nuestros usuarios. Por favor, registrate para operar en nuestro sitio.')
+      setAuthMessage('Necesitás una sesión activa y al menos una mejora en el carrito para confirmar la compra.')
       return
     }
 
     if (!user.email) {
-      setAuthMessage('No pudimos confirmar la compra porque no hay registros en nuestra red.')
+      setAuthMessage('No pudimos confirmar la compra porque tu cuenta no tiene un correo válido.')
       return
     }
 
     try {
       await createPurchaseOrder(db, user.uid, user.email, cart)
 
-      await addNotification('Producto en espera', 'Carrito enviado para aceptación de compra', {
+      await addNotification('Compra en revisión', 'Tu pedido fue enviado para revisión', {
         email: user.email,
         total: String(cartTotal),
       })
 
       setCart([])
-      setAuthMessage('Compra preconfirmada: Orden generada.')
+      setAuthMessage('Compra preconfirmada. Tu orden quedó registrada.')
     } catch {
       setAuthMessage('No pudimos guardar la orden. Vuelve a intentarlo en unos minutos.')
     }
@@ -193,7 +193,7 @@ export default function Home({ focusSection }: HomeProps) {
     setContactMessage(null)
 
     if (contactDescription.trim().length < 20) {
-      setContactMessage('Tu perfil debe tener al menos 20 caracteres para evaluación.')
+      setContactMessage('Tu presentación debe tener al menos 20 caracteres para poder evaluarla.')
       return
     }
 
@@ -208,8 +208,8 @@ export default function Home({ focusSection }: HomeProps) {
       await addDoc(collection(db, 'mail'), {
         to: [contactEmail],
         message: {
-          subject: 'Postulación recibida en nuestros sistemas',
-          text: `Hola ${contactName}, recibimos tu perfil para operaciones en Night City: "${contactDescription}"`,
+          subject: 'Postulación recibida en la red',
+          text: `Hola ${contactName}, recibimos tu perfil para futuras operaciones en Night City: "${contactDescription}"`,
         },
       })
 
@@ -220,9 +220,9 @@ export default function Home({ focusSection }: HomeProps) {
       setContactName('')
       setContactEmail('')
       setContactDescription('')
-      setContactMessage('Postulación enviada con éxito. El personal encargado te contactará pronto.')
+      setContactMessage('Postulación enviada con éxito. Nuestro equipo de reclutamiento te contactará pronto.')
     } catch {
-      setContactMessage('Fallo en la red. Vuelve a intentarlo en unos minutos.')
+      setContactMessage('No pudimos enviar tu postulación. Intentá nuevamente en unos minutos.')
     }
   }
 
@@ -244,7 +244,7 @@ export default function Home({ focusSection }: HomeProps) {
         <div>
           <h2 className="text-2xl font-semibold text-purple-100">Acceso</h2>
           <p className="mt-2 text-sm text-purple-200">
-            Para operar en nuestra red, valida tu identidad.
+            Validá tu identidad para operar en la red.
           </p>
           {user ? (
             <div className="mt-4 space-y-3 rounded-xl bg-purple-900/40 p-4">
@@ -262,7 +262,7 @@ export default function Home({ focusSection }: HomeProps) {
 
         <form className="space-y-3" onSubmit={handleSignIn}>
           <label className="block text-sm text-purple-100">
-            ID
+            Correo
             <input
               type="email"
               value={authEmail}
@@ -309,7 +309,7 @@ export default function Home({ focusSection }: HomeProps) {
           <div>
             <h2 className="text-2xl font-semibold text-purple-100">Productos</h2>
             <p className="mt-1 text-sm text-purple-200">
-              Personaliza tu pedido y verifica cada mejora antes de autorizar el pago digital.
+              Revisá cada mejora, personalizá tu pedido y autorizá la compra cuando estés listo.
             </p>
           </div>
         </div>
@@ -349,7 +349,7 @@ export default function Home({ focusSection }: HomeProps) {
                       className="rounded-lg border border-purple-300 px-3 py-2 text-sm text-purple-100 hover:bg-purple-800/40"
                       onClick={() => setSelectedProduct(product)}
                     >
-                      Vista previa
+                      Ver detalles
                     </button>
                     <button
                       className="rounded-lg bg-purple-700 px-3 py-2 text-sm text-white hover:bg-purple-800"
@@ -422,8 +422,7 @@ export default function Home({ focusSection }: HomeProps) {
       >
         <h2 className="text-2xl font-semibold text-purple-100">Contacto</h2>
         <p className="mt-2 text-sm text-purple-200">
-          ¿Querés formar parte de nuestra empresa? Buscamos talentos para desarrollo de implantes y cyberware,
-          operaciones de campo y seguridad corporativa en los distritos de Night City.
+          ¿Querés formar parte de nuestra red? Buscamos talento para desarrollo de implantes, operaciones de campo y seguridad corporativa en los distritos de Night City.
         </p>
         <form className="mt-4 grid gap-4 md:grid-cols-2" onSubmit={handleContactSubmit}>
           <label className="text-sm text-purple-100">
@@ -436,7 +435,7 @@ export default function Home({ focusSection }: HomeProps) {
             />
           </label>
           <label className="text-sm text-purple-100">
-            ID de contacto
+            Correo de contacto
             <input
               type="email"
               value={contactEmail}
