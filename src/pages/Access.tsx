@@ -1,5 +1,9 @@
-import Home from './Home'
+import AccessPageSection from '../sections/AccessPageSection'
 
 export default function Access() {
-  return <Home showHero={false} singleSection="acceso" />
+  return (
+    <div className="mx-auto max-w-6xl space-y-12 pb-16">
+      <AccessPageSection />
+    </div>
+  )
 }
