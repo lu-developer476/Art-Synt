@@ -6,7 +6,7 @@ import Contact from './pages/Contact'
 import Header from './components/Header'
 import Footer from './components/Footer'
 
-function AppContent() {
+function AppLayout() {
   const location = useLocation()
   const isHome = location.pathname === '/'
 
@@ -14,7 +14,7 @@ function AppContent() {
     <div className="min-h-screen bg-black text-white">
       <Header />
 
-      <main>
+      <main className="w-full">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/acceso" element={<Access />} />
@@ -23,7 +23,7 @@ function AppContent() {
         </Routes>
       </main>
 
-      {isHome && <Footer />}
+      {isHome ? <Footer /> : null}
     </div>
   )
 }
@@ -31,7 +31,7 @@ function AppContent() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AppContent />
+      <AppLayout />
     </BrowserRouter>
   )
 }
