@@ -17,15 +17,15 @@ export default function HeroSection() {
         />
 
         <h1 className="mt-3 bg-gradient-to-r from-purple-200 via-purple-400 to-slate-300 bg-clip-text text-4xl font-black text-transparent md:text-6xl">
-          Donde la carne sueña en binario y el metal responde con memoria propia
+          La carne y el metal, entrelazados. Aumenta tus propias capacidades
         </h1>
 
         <p className="mt-4 max-w-3xl text-base text-purple-100/90 md:text-lg">
-          <em>"Forjamos ventajas humanas con nuestras conexiones"</em>
+          <em>"Potenciamos lo humano con precisión, criterio y control."</em>
         </p>
 
         <p className="mt-4 max-w-3xl text-base text-purple-200 md:text-lg">
-          Cada mejora calibrada para tu ritmo, tu riesgo y tu forma de atravesar la ciudad cuando todo vibra al límite.
+          Implantes y mejoras calibrados para tu ritmo, tu nivel de exigencia y la forma en que te movés cuando la ciudad empuja al límite.
         </p>
 
         <nav className="mt-7 flex flex-wrap gap-3" aria-label="Navegación interna">

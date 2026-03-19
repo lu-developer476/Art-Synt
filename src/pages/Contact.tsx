@@ -43,9 +43,9 @@ export default function Contact() {
       setContactName('')
       setContactEmail('')
       setContactDescription('')
-      setContactMessage('Postulación enviada con éxito a Firestore. Reclutamiento te contactará.')
+      setContactMessage('Postulación enviada con éxito. Reclutamiento te contactará pronto.')
     } catch {
-      setContactMessage('No pudimos enviar la postulación. Verificá Firestore Database y sus reglas.')
+      setContactMessage('No pudimos enviar la postulación. Intentá nuevamente en unos minutos.')
     }
   }
 
@@ -67,7 +67,7 @@ export default function Contact() {
           />
         </label>
         <label className="text-sm text-purple-100">
-          e-mail de contacto
+          Correo de contacto
           <input
             type="email"
             value={contactEmail}
@@ -77,7 +77,7 @@ export default function Contact() {
           />
         </label>
         <label className="text-sm text-purple-100 md:col-span-2">
-          Contanos tu especialidad y experiencia en Night City
+          Contanos tu especialidad y experiencia previa
           <textarea
             value={contactDescription}
             onChange={(event) => setContactDescription(event.target.value)}

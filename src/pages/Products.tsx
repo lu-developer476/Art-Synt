@@ -40,7 +40,7 @@ export default function Products() {
         const items = await getOrSeedProducts()
         setProducts(items)
       } catch {
-        setError('No pudimos conectar con Firebase. Revisá tus variables VITE_FIREBASE_*')
+        setError('No pudimos cargar el catálogo en este momento. Intentá nuevamente en unos minutos.')
       } finally {
         setLoading(false)
       }
@@ -77,27 +77,27 @@ export default function Products() {
 
   const handleConfirmPurchase = async () => {
     if (!user || cart.length === 0) {
-      setAuthMessage('Necesitás sesión activa y productos en el carrito para confirmar la compra.')
+      setAuthMessage('Necesitás una sesión activa y al menos una mejora en el carrito para confirmar la compra.')
       return
     }
 
     if (!user.email) {
-      setAuthMessage('No pudimos confirmar la compra porque tu cuenta no tiene correo válido.')
+      setAuthMessage('No pudimos confirmar la compra porque tu cuenta no tiene un correo válido.')
       return
     }
 
     try {
       await createPurchaseOrder(db, user.uid, user.email, cart)
 
-      await addNotification('Compra en revisión', 'Carrito enviado para confirmación de compra', {
+      await addNotification('Compra en revisión', 'Tu pedido fue enviado para revisión', {
         email: user.email,
         total: String(cartTotal),
       })
 
       setCart([])
-      setAuthMessage('Compra preconfirmada: Firestore creó tu orden en purchaseOrders.')
+      setAuthMessage('Compra preconfirmada. Tu orden quedó registrada.')
     } catch {
-      setAuthMessage('No pudimos guardar la orden. Revisá permisos de Firestore (rules).')
+      setAuthMessage('No pudimos guardar la orden. Intentá nuevamente en unos minutos.')
     }
   }
 
@@ -107,7 +107,7 @@ export default function Products() {
         <div>
           <h2 className="text-2xl font-semibold text-purple-100">Productos</h2>
           <p className="mt-1 text-sm text-purple-200">
-            Personaliza tu pedido y verifica cada mejora antes de autorizar el pago digital.
+            Revisá cada mejora, personalizá tu pedido y autorizá la compra cuando estés listo.
           </p>
         </div>
       </div>
@@ -151,7 +151,7 @@ export default function Products() {
                     className="rounded-lg border border-purple-300 px-3 py-2 text-sm text-purple-100 hover:bg-purple-800/40"
                     onClick={() => setSelectedProduct(product)}
                   >
-                    Detalles
+                    Ver detalles
                   </button>
                   <button
                     className="rounded-lg bg-purple-700 px-3 py-2 text-sm text-white hover:bg-purple-800"
