@@ -4,6 +4,31 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 5173
-  }
+    port: 5173,
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) {
+            return undefined
+          }
+
+          if (id.includes('firebase/auth')) {
+            return 'firebase-auth'
+          }
+
+          if (id.includes('firebase/firestore')) {
+            return 'firebase-firestore'
+          }
+
+          if (id.includes('react') || id.includes('react-router-dom')) {
+            return 'react-vendor'
+          }
+
+          return undefined
+        },
+      },
+    },
+  },
 })

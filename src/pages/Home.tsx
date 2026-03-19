@@ -1,25 +1,16 @@
-import { useState, type FormEvent } from 'react'
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
-import AccessSection from '../components/home/AccessSection'
-import CartSection from '../components/home/CartSection'
-import ContactSection from '../components/home/ContactSection'
-import ProductsSection from '../components/home/ProductsSection'
-import { db } from '../firebase/config'
+import { lazy, Suspense, useState, type FormEvent } from 'react'
 import { useAuthState } from '../hooks/useAuthState'
 import { useCart } from '../hooks/useCart'
 import { useProducts } from '../hooks/useProducts'
 import { addNotification } from '../lib/home'
 import HeroSection from '../sections/Hero'
 
-type HomeSection = 'acceso' | 'productos' | 'contacto'
+const AccessSection = lazy(() => import('../components/home/AccessSection'))
+const ProductsSection = lazy(() => import('../components/home/ProductsSection'))
+const CartSection = lazy(() => import('../components/home/CartSection'))
+const ContactSection = lazy(() => import('../components/home/ContactSection'))
 
-interface HomeProps {
-  showHero?: boolean
-  singleSection?: HomeSection
-}
-
-export default function Home({ showHero = true, singleSection }: HomeProps) {
-
+export default function Home() {
   const auth = useAuthState()
   const products = useProducts()
   const cart = useCart()
@@ -28,7 +19,6 @@ export default function Home({ showHero = true, singleSection }: HomeProps) {
   const [contactEmail, setContactEmail] = useState('')
   const [contactDescription, setContactDescription] = useState('')
   const [contactMessage, setContactMessage] = useState<string | null>(null)
-
 
   const handleContactSubmit = async (event: FormEvent) => {
     event.preventDefault()
@@ -40,6 +30,9 @@ export default function Home({ showHero = true, singleSection }: HomeProps) {
     }
 
     try {
+      const { addDoc, collection, serverTimestamp } = await import('firebase/firestore')
+      const { db } = await import('../firebase/config')
+
       await addDoc(collection(db, 'contactMessages'), {
         name: contactName,
         email: contactEmail,
@@ -68,72 +61,66 @@ export default function Home({ showHero = true, singleSection }: HomeProps) {
     }
   }
 
-  const sections = {
-    acceso: (
-      <section>
-        <AccessSection
-          authEmail={auth.authEmail}
-          authMessage={auth.authMessage}
-          authPassword={auth.authPassword}
-          onEmailChange={auth.setAuthEmail}
-          onPasswordChange={auth.setAuthPassword}
-          onSignIn={auth.handleSignIn}
-          onSignOut={auth.signOut}
-          onSignUp={auth.handleSignUp}
-          user={auth.user}
-        />
-      </section>
-    ),
-    productos: (
-      <section className="space-y-6">
-        <ProductsSection
-          cartTotal={cart.cartTotal}
-          error={products.error}
-          loading={products.loading}
-          onAddToCart={cart.addToCart}
-          onSelectProduct={products.setSelectedProduct}
-          products={products.products}
-          selectedProduct={products.selectedProduct}
-        />
-        <CartSection
-          cart={cart.cart}
-          message={cart.purchaseMessage}
-          onConfirmPurchase={() => cart.confirmPurchase(auth.user)}
-          user={auth.user}
-        />
-      </section>
-    ),
-    contacto: (
-      <section>
-        <ContactSection
-          contactDescription={contactDescription}
-          contactEmail={contactEmail}
-          contactMessage={contactMessage}
-          contactName={contactName}
-          onDescriptionChange={setContactDescription}
-          onEmailChange={setContactEmail}
-          onNameChange={setContactName}
-          onSubmit={handleContactSubmit}
-        />
-      </section>
-    ),
-  }
-
-  const visibleSections = singleSection ? [sections[singleSection]] : Object.values(sections)
-
   return (
     <div className="mx-auto max-w-6xl space-y-12 pb-16">
-      {showHero ? <HeroSection /> : null}
+      <HeroSection />
 
-      {showHero ? (
-        <section className="grid gap-4 md:grid-cols-3">
-          <InfoCard label="Productos" value={products.products.length || 10} />
-          <InfoCard label="Mejoras en carrito" value={cart.cart.length} />
-          <InfoCard label="Estado" value={products.loading ? 'Sincronizando' : 'Activo'} />
+      <section className="grid gap-4 md:grid-cols-3">
+        <InfoCard label="Productos" value={products.products.length || 10} />
+        <InfoCard label="Mejoras en carrito" value={cart.cart.length} />
+        <InfoCard label="Estado" value={products.loading ? 'Sincronizando' : 'Activo'} />
+      </section>
+
+      <Suspense fallback={<SectionSkeleton className="min-h-[420px]" />}>
+        <section>
+          <AccessSection
+            authEmail={auth.authEmail}
+            authMessage={auth.authMessage}
+            authPassword={auth.authPassword}
+            onEmailChange={auth.setAuthEmail}
+            onPasswordChange={auth.setAuthPassword}
+            onSignIn={auth.handleSignIn}
+            onSignOut={auth.signOut}
+            onSignUp={auth.handleSignUp}
+            user={auth.user}
+          />
         </section>
-      ) : null}
+      </Suspense>
 
-      {visibleSections}
+      <Suspense fallback={<SectionSkeleton className="min-h-[780px]" />}>
+        <section className="space-y-6">
+          <ProductsSection
+            cartTotal={cart.cartTotal}
+            error={products.error}
+            loading={products.loading}
+            onAddToCart={cart.addToCart}
+            onSelectProduct={products.setSelectedProduct}
+            products={products.products}
+            selectedProduct={products.selectedProduct}
+          />
+          <CartSection
+            cart={cart.cart}
+            message={cart.purchaseMessage}
+            onConfirmPurchase={() => cart.confirmPurchase(auth.user)}
+            user={auth.user}
+          />
+        </section>
+      </Suspense>
+
+      <Suspense fallback={<SectionSkeleton className="min-h-[420px]" />}>
+        <section>
+          <ContactSection
+            contactDescription={contactDescription}
+            contactEmail={contactEmail}
+            contactMessage={contactMessage}
+            contactName={contactName}
+            onDescriptionChange={setContactDescription}
+            onEmailChange={setContactEmail}
+            onNameChange={setContactName}
+            onSubmit={handleContactSubmit}
+          />
+        </section>
+      </Suspense>
     </div>
   )
 }
@@ -144,5 +131,17 @@ function InfoCard({ label, value }: { label: string; value: number | string }) {
       <p className="text-sm uppercase tracking-[0.3em] text-purple-300">{label}</p>
       <p className="mt-3 text-3xl font-semibold text-purple-50">{value}</p>
     </article>
+  )
+}
+
+function SectionSkeleton({ className }: { className?: string }) {
+  return (
+    <div
+      className={[
+        'animate-pulse rounded-3xl border border-purple-400/40 bg-black/40',
+        className,
+      ].join(' ')}
+      aria-hidden="true"
+    />
   )
 }
