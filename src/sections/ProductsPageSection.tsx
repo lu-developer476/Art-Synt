@@ -12,18 +12,27 @@ export default function ProductsPageSection() {
   return (
     <section className="space-y-6">
       <ProductsSection
+        cartCount={cart.cartCount}
         cartTotal={cart.cartTotal}
         error={products.error}
         loading={products.loading}
         onAddToCart={cart.addToCart}
+        onOpenCart={cart.openCart}
         onSelectProduct={products.setSelectedProduct}
         products={products.products}
         selectedProduct={products.selectedProduct}
       />
       <CartSection
         cart={cart.cart}
+        cartCount={cart.cartCount}
+        cartTotal={cart.cartTotal}
+        isOpen={cart.isCartOpen}
         message={cart.purchaseMessage}
-        onConfirmPurchase={() => cart.confirmPurchase(auth.user)}
+        onCheckout={() => cart.checkout(auth.user)}
+        onClose={cart.closeCart}
+        onDecreaseQuantity={cart.decreaseQuantity}
+        onIncreaseQuantity={cart.increaseQuantity}
+        onRemoveFromCart={cart.removeFromCart}
         user={auth.user}
       />
     </section>

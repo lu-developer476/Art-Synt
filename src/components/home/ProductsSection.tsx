@@ -2,24 +2,33 @@ import type { Product } from '../../data/products'
 import { formatPrice } from '../../lib/home'
 
 interface ProductsSectionProps {
+  cartCount: number
   cartTotal: number
   error: string | null
   loading: boolean
   onAddToCart: (product: Product) => void
+  onOpenCart: () => void
   onSelectProduct: (product: Product | null) => void
   products: Product[]
   selectedProduct: Product | null
 }
 
 export default function ProductsSection({
+  cartCount,
   cartTotal,
   error,
   loading,
   onAddToCart,
+  onOpenCart,
   onSelectProduct,
   products,
   selectedProduct,
 }: ProductsSectionProps) {
+  const handleAddToCart = (product: Product) => {
+    onAddToCart(product)
+    onOpenCart()
+  }
+
   return (
     <section className="space-y-5">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -29,6 +38,13 @@ export default function ProductsSection({
             Revisá cada mejora, personalizá tu pedido y autorizá la compra cuando estés listo.
           </p>
         </div>
+        <button
+          type="button"
+          className="rounded-full border border-purple-300/60 bg-purple-900/40 px-4 py-2 text-sm font-medium text-purple-100 transition hover:border-purple-200 hover:bg-purple-800/50"
+          onClick={onOpenCart}
+        >
+          Carrito · {cartCount} item{cartCount === 1 ? '' : 's'} · {formatPrice(cartTotal)}
+        </button>
       </div>
 
       {error ? (
@@ -64,44 +80,35 @@ export default function ProductsSection({
                   </span>
                 </div>
                 <p className="text-lg font-bold text-purple-200">{formatPrice(product.price)}</p>
-                <p className="font-android text-sm text-purple-300">{product.description}</p>
                 <div className="flex flex-wrap gap-3">
                   <button
-                    className="rounded-lg border border-purple-300 px-3 py-2 text-sm text-purple-100 hover:bg-purple-800/40"
-                    onClick={() => onSelectProduct(product)}
+                    type="button"
+                    className="rounded-lg border border-purple-300 px-3 py-2 text-sm text-purple-100 transition hover:bg-purple-800/40"
+                    onClick={() => onSelectProduct(selectedProduct?.id === product.id ? null : product)}
                   >
-                    Ver detalles
+                    {selectedProduct?.id === product.id ? 'Ocultar detalles' : 'Ver detalles'}
                   </button>
                   <button
-                    className="rounded-lg bg-purple-700 px-3 py-2 text-sm text-white hover:bg-purple-800"
-                    onClick={() => onAddToCart(product)}
+                    type="button"
+                    className="rounded-lg bg-purple-700 px-3 py-2 text-sm text-white transition hover:bg-purple-800"
+                    onClick={() => handleAddToCart(product)}
                   >
-                    Agregar al carrito · Total: {formatPrice(cartTotal)}
+                    Agregar al carrito · Total: {formatPrice(cartTotal + product.price)}
                   </button>
                 </div>
+                {selectedProduct?.id === product.id ? (
+                  <div className="rounded-2xl border border-purple-300/40 bg-purple-950/40 p-4">
+                    <p className="font-android text-sm leading-6 text-purple-200">{product.description}</p>
+                    <p className="mt-3 text-sm font-semibold uppercase tracking-[0.2em] text-purple-300/80">
+                      Categoría: {product.category}
+                    </p>
+                  </div>
+                ) : null}
               </div>
             </article>
           ))}
         </div>
       )}
-
-      {selectedProduct ? (
-        <section className="rounded-2xl border border-purple-300/50 bg-purple-950/60 p-6">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h3 className="font-android text-2xl font-semibold text-purple-100">{selectedProduct.name}</h3>
-              <p className="font-android mt-2 text-purple-200">{selectedProduct.description}</p>
-              <p className="mt-3 text-lg font-bold text-purple-100">Precio: {formatPrice(selectedProduct.price)}</p>
-            </div>
-            <button
-              className="rounded-lg border border-purple-300 px-3 py-2 text-sm text-purple-100 hover:bg-purple-900/50"
-              onClick={() => onSelectProduct(null)}
-            >
-              Cerrar detalles
-            </button>
-          </div>
-        </section>
-      ) : null}
     </section>
   )
 }
