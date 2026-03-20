@@ -5,6 +5,7 @@ interface ContactSectionProps {
   contactEmail: string
   contactMessage: string | null
   contactName: string
+  isSubmitting: boolean
   onDescriptionChange: (value: string) => void
   onEmailChange: (value: string) => void
   onNameChange: (value: string) => void
@@ -16,6 +17,7 @@ export default function ContactSection({
   contactEmail,
   contactMessage,
   contactName,
+  isSubmitting,
   onDescriptionChange,
   onEmailChange,
   onNameChange,
@@ -28,6 +30,9 @@ export default function ContactSection({
         ¿Querés formar parte de nuestra red? Buscamos talentos para desarrollo de implantes,
         operaciones de campo y seguridad corporativa en los distritos de Night City.
       </p>
+      <div className="mt-4 rounded-2xl border border-cyan-400/30 bg-cyan-950/20 p-4 text-sm text-cyan-100">
+        Tu postulación ahora dispara un envío real por Nodemailer: notifica al equipo y te devuelve una confirmación automática en tu casilla.
+      </div>
       <form className="mt-4 grid gap-4 md:grid-cols-2" onSubmit={(event) => void onSubmit(event)}>
         <label className="text-sm text-purple-100">
           Nombre o alias operativo
@@ -61,9 +66,10 @@ export default function ContactSection({
         </label>
         <button
           type="submit"
-          className="rounded-lg bg-purple-700 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-800 md:w-fit"
+          disabled={isSubmitting}
+          className="rounded-lg bg-purple-700 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-800 disabled:cursor-not-allowed disabled:opacity-60 md:w-fit"
         >
-          Postular
+          {isSubmitting ? 'Enviando...' : 'Postular'}
         </button>
       </form>
       {contactMessage ? <p className="mt-3 text-sm text-purple-200">{contactMessage}</p> : null}
