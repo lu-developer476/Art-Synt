@@ -38,14 +38,14 @@ export default function AccessSection({
         <div>
           <h2 className="text-2xl font-semibold text-purple-100">Acceso</h2>
           <p className="mt-2 text-sm text-purple-200">
-            Validá tu identidad para operar en la red. Solo las cuentas con correo verificado pueden ingresar.
+            Se debe validar tu identidad para operar en la red. Solo las cuentas con correo verificado pueden ingresar.
           </p>
           <div className="mt-4 rounded-2xl border border-cyan-400/30 bg-cyan-950/20 p-4 text-sm text-cyan-100">
             <p className="font-semibold uppercase tracking-[0.2em] text-cyan-300">Flujo recomendado</p>
             <ol className="mt-3 list-decimal space-y-2 pl-5 text-purple-100/90">
               <li>Registrate con tu correo operativo.</li>
-              <li>Revisá la bandeja de entrada y spam para ubicar el mail de validación.</li>
-              <li>Abrí el enlace seguro y finalizá el acceso desde el centro de verificación.</li>
+              <li>Se ha notificado a su bandeja de entrada.</li>
+              <li>Por favor, debe abrir el enlace seguro y verificar los datos.</li>
             </ol>
           </div>
           {user ? (
@@ -88,7 +88,7 @@ export default function AccessSection({
             />
           </label>
           <div className="rounded-2xl border border-purple-400/40 bg-black/20 p-4 text-xs leading-6 text-purple-200">
-            Después del alta te enviaremos un correo real con Nodemailer y un enlace seguro de verificación gestionado por Firebase.
+            Después del alta le enviaremos un correo real con Nodemailer y un enlace seguro gestionado por Firebase.
           </div>
           <div className="flex flex-wrap gap-3">
             <button
@@ -110,7 +110,7 @@ export default function AccessSection({
               href={verificationCenterUrl}
               className="rounded-lg border border-cyan-400/60 px-4 py-2 text-sm text-cyan-100 transition hover:bg-cyan-900/30"
             >
-              Centro de verificación
+              Red
             </a>
           </div>
         </form>
@@ -122,7 +122,7 @@ export default function AccessSection({
             <p className="text-xs uppercase tracking-[0.35em] text-cyan-300">Cuenta creada</p>
             <h3 className="mt-3 text-2xl font-semibold text-white">Revisá el correo electrónico registrado</h3>
             <p className="mt-3 text-sm leading-6 text-purple-100">
-              Ya enviamos el mail de validación. Abrí el enlace que recibiste para habilitar tu cuenta y, si querés, seguí el estado desde nuestro centro de verificación.
+              Ya enviamos el correo seguro. El enlace recibido es para habilitar la cuenta y seguir el estado de compra desde nuestra red.
             </p>
             <div className="mt-5 rounded-2xl border border-purple-400/40 bg-black/30 p-4 text-sm text-purple-100">
               <p className="font-semibold text-cyan-300">Siguiente paso</p>
@@ -133,7 +133,7 @@ export default function AccessSection({
                 href={verificationCenterUrl}
                 className="rounded-lg bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-cyan-400"
               >
-                Abrir centro de verificación
+                Abrir red
               </a>
               <button
                 type="button"
