@@ -12,7 +12,8 @@ export default function HeroSection() {
 
         <div className="space-y-4">
           <h1 className="max-w-5xl text-4xl font-semibold uppercase leading-tight tracking-wide text-purple-100 md:text-6xl">
-            La carne y el metal, entrelazados. Aumenta tus propias capacidades
+            La carne y el metal, entrelazados
+            Aumentadno tus propias capacidades
           </h1>
 
           <p className="max-w-3xl text-lg italic text-purple-200/90">
