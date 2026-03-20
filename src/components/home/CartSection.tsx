@@ -43,10 +43,10 @@ export default function CartSection({
         <div className="flex items-start justify-between gap-4 border-b border-purple-300/20 p-6">
           <div>
             <p className="text-xs uppercase tracking-[0.35em] text-purple-300/70">Carrito</p>
-            <h3 className="mt-2 text-2xl font-semibold text-purple-100">Vista previa del pedido</h3>
+            <h3 className="mt-2 text-2xl font-semibold text-purple-100">Vista previa</h3>
             <p className="mt-2 text-sm text-purple-200">
               {cartCount === 0
-                ? 'Todavía no agregaste productos al carrito.'
+                ? 'No se han agregado productos al carrito.'
                 : `${cartCount} item${cartCount === 1 ? '' : 's'} · ${formatPrice(cartTotal)}`}
             </p>
           </div>
@@ -62,7 +62,7 @@ export default function CartSection({
         <div className="flex-1 space-y-4 overflow-y-auto p-6">
           {cart.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-purple-300/30 bg-purple-950/20 p-5 text-sm text-purple-200">
-              Sumá mejoras para ver el resumen del carrito y avanzar al checkout.
+              Añade otras mejoras para ver el resumen del carrito y avanzar al checkout.
             </div>
           ) : (
             cart.map((item) => (
@@ -127,7 +127,7 @@ export default function CartSection({
             Ir al checkout
           </button>
           {!user ? (
-            <p className="mt-3 text-sm text-purple-300">Iniciá sesión para completar el checkout.</p>
+            <p className="mt-3 text-sm text-purple-300">Ingresar a la red para completar el checkout.</p>
           ) : null}
           {message ? <p className="mt-3 text-sm text-purple-200">{message}</p> : null}
         </div>
