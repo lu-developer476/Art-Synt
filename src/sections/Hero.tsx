@@ -21,7 +21,7 @@ export default function HeroSection() {
           </p>
 
           <p className="max-w-4xl text-base text-purple-100/80 md:text-lg">
-            Implantes diseñados y calibrados para tu ritmo, exigencia y la forma en que la ciudad obliga a superarte.
+            Implantes calibrados y optimizados para tu ritmo, exigencia y la forma en que la ciudad obliga a superarte.
           </p>
         </div>
       </div>
