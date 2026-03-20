@@ -9,7 +9,7 @@ const statusCopy = {
   },
   pendiente: {
     eyebrow: 'Identidad pendiente de verificar acceso',
-    title: 'Todavía falta abrir el enlace seguro del correo.',
+    title: 'Falta abrir el enlace seguro del correo.',
     description:
       'Revisa la bandeja de entrada, spam o promociones del correo usado al registrarte para completar el estado final.',
   },
