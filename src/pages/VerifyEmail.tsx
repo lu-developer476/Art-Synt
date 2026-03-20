@@ -2,16 +2,16 @@ import { Link, useSearchParams } from 'react-router-dom'
 
 const statusCopy = {
   ok: {
-    eyebrow: 'Validación completada',
+    eyebrow: 'Identidad validada',
     title: 'Correo verificado correctamente.',
     description:
-      'La identidad quedó confirmada. Volvé a Acceso e iniciá sesión para operar dentro de A/S Nexus.',
+      'La identidad se encuentra confirmada. Regresa a Acceso e iniciá sesión para operar dentro de A/S Nexus.',
   },
   pendiente: {
     eyebrow: 'Pendiente de verificación',
     title: 'Todavía falta abrir el enlace seguro del correo.',
     description:
-      'Revisá la bandeja de entrada, spam o promociones del correo usado al registrarte. Cuando abras el enlace de validación, vas a regresar acá con el estado final.',
+      'Revisa la bandeja de entrada, spam o promociones del correo usado al registrarte para completar el estado final.',
   },
 } as const
 
@@ -31,7 +31,7 @@ export default function VerifyEmail() {
           <div className="rounded-3xl border border-purple-400/40 bg-black/30 p-5 text-sm text-purple-100">
             <p className="font-semibold text-cyan-300">Qué deberías ver en tu mail</p>
             <ul className="mt-3 list-disc space-y-2 pl-5 leading-6 text-purple-200">
-              <li>Un correo de verificación emitido por Firebase Authentication.</li>
+              <li>Un correo emitido por Firebase Authentication.</li>
               <li>Un correo adicional de A/S Nexus con Nodemailer para guiar el proceso.</li>
               <li>Un enlace seguro que valida tu cuenta y te devuelve a esta interfaz.</li>
             </ul>
@@ -39,7 +39,7 @@ export default function VerifyEmail() {
           <div className="rounded-3xl border border-purple-400/40 bg-black/30 p-5 text-sm text-purple-100">
             <p className="font-semibold text-cyan-300">Siguiente acción</p>
             <p className="mt-3 leading-6 text-purple-200">
-              Si ya validaste el correo, volvés a Acceso y tu login queda habilitado. Si no lo hiciste, revisá la bandeja del correo registrado y abrí el enlace pendiente.
+              Si ya validaste el correo, regresa a Acceso y tu login queda habilitado. Si no lo hiciste, vuelve a ingresar a tu casilla de mail registrado con el enlace pendiente.
             </p>
           </div>
         </div>
