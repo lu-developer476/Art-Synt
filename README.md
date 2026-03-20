@@ -10,22 +10,23 @@
 ![Firebase Auth](https://img.shields.io/badge/Firebase_Auth-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
 ![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
 ![Nodemailer](https://img.shields.io/badge/Nodemailer-009688?style=for-the-badge)
+![CORS](https://img.shields.io/badge/CORS-283593?style=for-the-badge)
 
-Art-Syntex (A/S Nexus) es una SPA con estética cyberpunk orientada a catálogo, acceso de usuarios y flujo básico de compra. El frontend corre sobre React + Vite y usa Firebase como backend gestionado para autenticación, catálogo y persistencia de datos.
+Art-Syntex (A/S Nexus) es una SPA orientada a catálogo, autenticación de usuarios y checkout básico. El frontend está construido con React + Vite y utiliza Firebase para autenticación, persistencia y despliegue. El repositorio también incluye un servicio Node.js independiente para envío transaccional de correos mediante Express y Nodemailer.
 
-## Estado real del proyecto
+## Estado actual del proyecto
 
 ### Frontend
 
-El frontend está implementado con:
+Stack principal:
 
 - **React 18**
-- **TypeScript**
-- **Vite**
-- **React Router DOM** para navegación cliente
-- **Tailwind CSS** para estilos
+- **TypeScript 5**
+- **Vite 7**
+- **React Router DOM 6**
+- **Tailwind CSS 3**
 
-La app expone las rutas:
+Rutas expuestas por la aplicación:
 
 - `/`
 - `/acceso`
@@ -33,108 +34,134 @@ La app expone las rutas:
 - `/contacto`
 - `/verificar-email`
 
+Capacidades implementadas:
+
+- Carga del catálogo desde **Cloud Firestore**.
+- Seed automático de `products` cuando la colección está vacía, utilizando `src/data/products.ts`.
+- Registro de usuarios con **Firebase Authentication** usando email/password.
+- Envío de verificación de correo mediante Firebase antes de habilitar el inicio de sesión.
+- Persistencia de perfiles básicos en `users/{uid}`.
+- Inicio y cierre de sesión con validación explícita del estado `emailVerified`.
+- Carrito en memoria del cliente con control de cantidades y cálculo de totales.
+- Generación de órdenes en `purchaseOrders` al ejecutar checkout.
+- Registro de postulaciones/contactos en `contactMessages`.
+- Escritura de eventos internos en `notifications` para altas, login y checkout.
+- Navegación con **lazy loading** de páginas y `Suspense` para fallback de rutas.
+
 ### Backend
 
-El repositorio incluye un backend Node.js separado en `server/index.js` con:
+Servicio opcional ubicado en `server/index.js` con:
 
-- **Express**
-- **CORS**
-- **Nodemailer**
+- **Express 4**
+- **CORS** configurable por origen
+- **Nodemailer** con transporte Gmail
+- Validación y sanitización de payloads
+- Rate limiting en memoria
+- Endpoint de salud (`GET /health`)
+- Endpoints de correo:
+  - `POST /contact`
+  - `POST /registration-notice`
 
-## Actualmente el frontend:
+El backend procesa dos flujos transaccionales:
 
-- Carga el catálogo desde **Firestore**.
-- Si la colección `products` está vacía, hace un **seed automático** con los datos de `src/data/products.ts`.
-- Permite registrar usuarios con **Firebase Authentication** (email/password) y exige verificación de email antes del login.
-- Guarda el perfil básico del usuario en `users/{uid}`.
-- Permite iniciar sesión y cerrar sesión, bloqueando el acceso si el correo no está validado.
-- Envía notificaciones reales por **Nodemailer** para alta de cuenta y formulario de contacto.
-- Permite agregar productos al carrito en memoria del cliente.
-- Al confirmar compra, crea una orden en `purchaseOrders`.
-- El formulario de contacto guarda postulaciones en `contactMessages`.
-- Además escribe documentos en `mail` y `notifications` para flujos auxiliares dentro de Firebase.
+- Notificación de contacto/postulación al destinatario configurado y confirmación automática al remitente.
+- Correo complementario de onboarding para guiar la validación de cuenta registrada en Firebase Authentication.
 
 ## Rol de Firebase
 
-Firebase cumple varios roles en el proyecto:
+### Authentication
 
-### 1. Authentication
+**Firebase Authentication** se utiliza con proveedor **Email/Password** para:
 
-Se usa **Firebase Authentication** con proveedor **Email/Password** para:
-
-- registro de usuario
+- alta de usuario
 - inicio de sesión
-- persistencia de sesión del usuario autenticado
+- persistencia de sesión autenticada
+- envío del email de verificación
+- bloqueo de acceso mientras `emailVerified` sea `false`
 
-### 2. Cloud Firestore
+### Cloud Firestore
 
-Se usa **Firestore** como base de datos principal para:
+**Cloud Firestore** funciona como base de datos principal para:
 
 - `products`: catálogo
 - `users`: perfiles de usuario
-- `purchaseOrders`: órdenes de compra
-- `contactMessages`: mensajes enviados desde contacto
-- `notifications`: eventos internos
-- `mail`: documentos de correo para integraciones/extensiones basadas en Firebase
+- `purchaseOrders`: órdenes generadas desde checkout
+- `contactMessages`: mensajes/postulaciones enviadas desde contacto
+- `notifications`: eventos operativos internos
 
-### 3. Hosting
+### Hosting
 
-El deploy del frontend está preparado para **Firebase Hosting**, publicando la carpeta `dist` generada por Vite.
+La SPA está preparada para desplegarse en **Firebase Hosting**, publicando la carpeta `dist` y resolviendo todas las rutas al `index.html` de Vite.
 
-### 4. Reglas e índices
+### Reglas e índices
 
 El repositorio incluye:
 
 - reglas de Firestore en `src/firebase/firestore.rules`
 - índices de Firestore en `src/firebase/firestore.indexes.json`
 
-## Arquitectura resumida
+Las reglas actuales permiten:
+
+- lectura pública del catálogo
+- escritura temporal en `products` hasta el **1 de enero de 2030**
+- acceso propietario a `users/{uid}`
+- creación y lectura restringida de `purchaseOrders` al usuario autenticado dueño del documento
+- creación pública de `contactMessages`
+- creación de `notifications` sólo por usuarios autenticados
+
+## Arquitectura
 
 ```text
-React + Vite SPA
+Frontend SPA (React + Vite)
         |
+        |-- React Router DOM
+        |-- Tailwind CSS
         |-- Firebase Authentication
         |-- Cloud Firestore
         \-- Firebase Hosting
 
-Servidor opcional separado
-Node.js + Express + Nodemailer
+Servicio de correo opcional (Node.js)
         |
+        |-- Express
+        |-- CORS
+        |-- Nodemailer
         \-- SMTP / Gmail
 ```
 
-## Estructura principal
+## Estructura principal del repositorio
 
 ```text
 src/
-  components/        Componentes UI
-  data/              Seed estático de productos
-  firebase/          Configuración Firebase, reglas e integración con Firestore
-  hooks/             Estado de auth, carrito y productos
-  layout/            Layout principal
-  pages/             Rutas principales
-  sections/          Secciones de página
+  components/        Componentes visuales reutilizables
+  data/              Seed tipado del catálogo
+  firebase/          Configuración, acceso a Firestore y reglas/índices
+  hooks/             Lógica de auth, catálogo y carrito
+  layout/            Shell principal y navegación
+  lib/               Utilidades compartidas y cliente HTTP
+  pages/             Entradas por ruta
+  sections/          Composición de cada página
 server/
-  index.js           Servidor Express para envío de correo
+  index.js           API Express para correo transaccional
 ```
 
 ## Requisitos
 
-- **Node.js 18+** recomendado
+- **Node.js 18 o superior**
 - **npm**
-- Un proyecto de **Firebase** con Authentication y Firestore habilitados
+- Proyecto de **Firebase** con Authentication y Firestore habilitados
+- Cuenta de correo apta para uso con **Nodemailer** si se ejecuta el backend
 
 ## Variables de entorno
 
 ### Frontend (`.env`)
 
-Crear un archivo `.env` a partir de `.env.example`:
+Crear el archivo local a partir de `.env.example`:
 
 ```bash
 cp .env.example .env
 ```
 
-Variables requeridas por el frontend:
+Variables requeridas:
 
 ```env
 VITE_FIREBASE_API_KEY=
@@ -145,119 +172,111 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=
 VITE_FIREBASE_APP_ID=
 ```
 
-### Backend Express opcional
+Variable opcional:
+
+```env
+VITE_API_BASE_URL=http://localhost:3001
+```
+
+`VITE_API_BASE_URL` define la base de la API consumida por el frontend para `/contact` y `/registration-notice`. Si no se declara, el cliente usa `http://localhost:3001`.
+
+### Backend (`server/index.js`)
 
 ```env
 EMAIL_USER=
 EMAIL_PASS=
+CONTACT_RECEIVER_EMAIL=
 ALLOWED_ORIGIN=
+APP_BASE_URL=
 PORT=3001
 ```
 
-Notas:
+Descripción:
 
-- `EMAIL_USER` y `EMAIL_PASS` son obligatorias para que el servidor arranque.
-- `CONTACT_RECEIVER_EMAIL` es opcional y permite definir un destinatario distinto para las postulaciones.
-- `APP_BASE_URL` es opcional y se usa para construir los links públicos incluidos en los mails.
-- `ALLOWED_ORIGIN` restringe CORS para permitir solo un origen concreto.
-- Estas variables **no** son necesarias para levantar el frontend si no se usa el backend Express.
+- `EMAIL_USER`: cuenta emisora utilizada por Nodemailer.
+- `EMAIL_PASS`: credencial o app password asociada a `EMAIL_USER`.
+- `CONTACT_RECEIVER_EMAIL`: destinatario de las postulaciones; si no se informa, se utiliza `EMAIL_USER`.
+- `ALLOWED_ORIGIN`: origen permitido por CORS.
+- `APP_BASE_URL`: URL pública usada en links incluidos en los correos.
+- `PORT`: puerto de escucha del servicio Express.
 
-## Cómo correr el proyecto localmente
+`EMAIL_USER` y `EMAIL_PASS` son obligatorias para iniciar el backend. El frontend puede ejecutarse sin estas variables siempre que no se requiera el servicio de correo.
 
-### Opción A: solo frontend (flujo principal actual)
+## Ejecución local
 
-1. Instalá dependencias:
+### 1. Instalar dependencias
 
 ```bash
 npm install
 ```
 
-2. Configurar `.env` con tus credenciales de Firebase.
+### 2. Configurar entorno
 
-3. Verificar en Firebase Console que estén habilitados:
+- Completar `.env` con las credenciales de Firebase.
+- Si se ejecuta el backend, exportar o definir las variables requeridas por `server/index.js`.
+- Habilitar en Firebase Console:
+  - Authentication > Email/Password
+  - Firestore Database
 
-- Authentication > Email/Password
-- Firestore Database
-
-4. Iniciar el frontend:
+### 3. Iniciar el frontend
 
 ```bash
 npm run dev
 ```
 
-La app de Vite corre por defecto en `http://localhost:5173`.
+Vite expone la aplicación por defecto en `http://localhost:5173`.
 
-### Opción B: frontend + backend Express de correo
-
-Si además querés levantar el servidor Express incluido en el repo:
+### 4. Iniciar el backend de correo opcional
 
 ```bash
 npm run server
 ```
 
-Por defecto: `http://localhost:3001`.
+El servicio Express escucha por defecto en `http://localhost:3001`.
 
-> Levantar este servidor no cambia el comportamiento del frontend actual por sí solo. La interfaz ya consume los endpoints `POST /contact` y `POST /registration-notice` para contacto y onboarding de acceso.
-
-## Cómo hacer build
-
-Para generar el build de producción del frontend:
+## Build de producción
 
 ```bash
 npm run build
 ```
 
-Esto ejecuta:
+Este comando ejecuta:
 
-- compilación TypeScript
-- build de Vite
-- salida final en `dist/`
+1. compilación TypeScript
+2. build de Vite
+3. emisión de artefactos en `dist/`
 
-Para previsualizar localmente el build generado:
+Vista previa local del build:
 
 ```bash
 npm run preview
 ```
 
-## Cómo desplegar
+## Despliegue
 
-### Frontend en Firebase Hosting
-
-1. Instalar dependencias:
-
-```bash
-npm install
-```
-
-2. Generar el build:
-
-```bash
-npm run build
-```
-
-3. Desplegar Hosting:
+### Hosting
 
 ```bash
 npm run firebase:deploy:hosting
 ```
 
-Ese flujo publica `dist/` en Firebase Hosting usando la configuración de `firebase.json`.
+Publica `dist/` en Firebase Hosting según `firebase.json`.
 
-### Reglas e índices de Firestore
-
-Para desplegar reglas e índices:
+### Firestore
 
 ```bash
 npm run firebase:deploy:firestore
 ```
 
-### Deploy completo de Firebase
+Publica reglas e índices definidos en `src/firebase/firestore.rules` y `src/firebase/firestore.indexes.json`.
 
-Si querés desplegar Hosting y Firestore en un mismo paso:
+### Despliegue completo
 
 ```bash
 npm run firebase:deploy
 ```
+
+Ejecuta el despliegue integral de recursos Firebase configurados en el proyecto.
 
 ## Scripts disponibles
 
@@ -271,9 +290,11 @@ npm run firebase:deploy:firestore
 npm run firebase:deploy:hosting
 ```
 
-## Configuración de Firebase recomendada
+## Consideraciones operativas
 
-1. Habilitar **Email/Password** en Firebase Authentication.
-2. Crear Firestore Database.
-3. Publica las reglas e índices incluidos en el repo.
-4. Para procesar la colección `mail`, configurar del lado de Firebase la integración/extensión correspondiente.
+- El seed del catálogo se ejecuta únicamente cuando `products` no contiene documentos.
+- El checkout requiere usuario autenticado y correo disponible en la sesión actual.
+- El login invalida la sesión si la cuenta existe pero todavía no verificó el correo.
+- El backend valida estructura y longitud de campos antes de enviar correos.
+- El rate limit del servicio Express utiliza almacenamiento en memoria; para despliegues horizontales conviene reemplazarlo por un store externo.
+- La colección `mail` figura en las reglas de Firestore, pero no existe escritura activa hacia esa colección dentro del código actual.
