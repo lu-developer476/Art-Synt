@@ -10,11 +10,11 @@ export default function HeroSection() {
           </h1>
 
           <p className="max-w-3xl text-lg italic text-purple-200/90">
-            “Potenciamos lo humano con precisión, criterio y control.”
+            “Potenciamos lo humano con precisión, criterio y control”
           </p>
 
           <p className="max-w-4xl text-base text-purple-100/80 md:text-lg">
-            Implantes y mejoras calibrados para tu ritmo, exigencia y la forma en que la ciudad te obliga a superarte.
+            Implantes diseñados y calibrados para tu ritmo, exigencia y la forma en que la ciudad obliga a superarte.
           </p>
         </div>
       </div>
