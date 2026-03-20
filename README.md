@@ -31,6 +31,7 @@ La app expone las rutas:
 - `/acceso`
 - `/productos`
 - `/contacto`
+- `/verificar-email`
 
 ### Backend
 
@@ -44,9 +45,10 @@ El repositorio incluye un backend Node.js separado en `server/index.js` con:
 
 - Carga el catálogo desde **Firestore**.
 - Si la colección `products` está vacía, hace un **seed automático** con los datos de `src/data/products.ts`.
-- Permite registrar usuarios con **Firebase Authentication** (email/password).
+- Permite registrar usuarios con **Firebase Authentication** (email/password) y exige verificación de email antes del login.
 - Guarda el perfil básico del usuario en `users/{uid}`.
-- Permite iniciar sesión y cerrar sesión.
+- Permite iniciar sesión y cerrar sesión, bloqueando el acceso si el correo no está validado.
+- Envía notificaciones reales por **Nodemailer** para alta de cuenta y formulario de contacto.
 - Permite agregar productos al carrito en memoria del cliente.
 - Al confirmar compra, crea una orden en `purchaseOrders`.
 - El formulario de contacto guarda postulaciones en `contactMessages`.
@@ -155,6 +157,8 @@ PORT=3001
 Notas:
 
 - `EMAIL_USER` y `EMAIL_PASS` son obligatorias para que el servidor arranque.
+- `CONTACT_RECEIVER_EMAIL` es opcional y permite definir un destinatario distinto para las postulaciones.
+- `APP_BASE_URL` es opcional y se usa para construir los links públicos incluidos en los mails.
 - `ALLOWED_ORIGIN` restringe CORS para permitir solo un origen concreto.
 - Estas variables **no** son necesarias para levantar el frontend si no se usa el backend Express.
 
@@ -193,7 +197,7 @@ npm run server
 
 Por defecto: `http://localhost:3001`.
 
-> Levantar este servidor no cambia el comportamiento del frontend actual por sí solo. Para usarlo desde la interfaz habría que integrar llamadas al endpoint `POST /send`.
+> Levantar este servidor no cambia el comportamiento del frontend actual por sí solo. La interfaz ya consume los endpoints `POST /contact` y `POST /registration-notice` para contacto y onboarding de acceso.
 
 ## Cómo hacer build
 

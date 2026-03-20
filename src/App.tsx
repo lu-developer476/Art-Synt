@@ -7,6 +7,7 @@ const Home = lazy(() => import('./pages/Home'))
 const Access = lazy(() => import('./pages/Access'))
 const Products = lazy(() => import('./pages/Products'))
 const Contact = lazy(() => import('./pages/Contact'))
+const VerifyEmail = lazy(() => import('./pages/VerifyEmail'))
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
             <Route path="/acceso" element={<Access />} />
             <Route path="/productos" element={<Products />} />
             <Route path="/contacto" element={<Contact />} />
+            <Route path="/verificar-email" element={<VerifyEmail />} />
           </Routes>
         </Suspense>
       </Container>
