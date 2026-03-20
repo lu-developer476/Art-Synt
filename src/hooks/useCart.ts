@@ -12,6 +12,7 @@ interface PurchaseUser {
 
 export function useCart() {
   const [cart, setCart] = useState<CartItem[]>([])
+  const [isCartOpen, setIsCartOpen] = useState(false)
   const [purchaseMessage, setPurchaseMessage] = useState<string | null>(null)
 
   const cartTotal = useMemo(
@@ -19,7 +20,10 @@ export function useCart() {
     [cart],
   )
 
+  const cartCount = useMemo(() => cart.reduce((acc, item) => acc + item.quantity, 0), [cart])
+
   const addToCart = (product: Product) => {
+    setPurchaseMessage(null)
     setCart((currentCart) => {
       const existing = currentCart.find((item) => item.product.id === product.id)
       if (existing) {
@@ -32,38 +36,74 @@ export function useCart() {
     })
   }
 
-  const confirmPurchase = async (user: PurchaseUser | null) => {
+  const increaseQuantity = (productId: string) => {
+    setPurchaseMessage(null)
+    setCart((currentCart) =>
+      currentCart.map((item) =>
+        item.product.id === productId ? { ...item, quantity: item.quantity + 1 } : item,
+      ),
+    )
+  }
+
+  const decreaseQuantity = (productId: string) => {
+    setPurchaseMessage(null)
+    setCart((currentCart) =>
+      currentCart
+        .map((item) =>
+          item.product.id === productId ? { ...item, quantity: item.quantity - 1 } : item,
+        )
+        .filter((item) => item.quantity > 0),
+    )
+  }
+
+  const removeFromCart = (productId: string) => {
+    setPurchaseMessage(null)
+    setCart((currentCart) => currentCart.filter((item) => item.product.id !== productId))
+  }
+
+  const openCart = () => setIsCartOpen(true)
+  const closeCart = () => setIsCartOpen(false)
+
+  const checkout = async (user: PurchaseUser | null) => {
     setPurchaseMessage(null)
 
     if (!user || cart.length === 0) {
-      setPurchaseMessage('Necesitás una sesión activa y al menos una mejora en el carrito para confirmar la compra.')
+      setPurchaseMessage('Necesitás una sesión activa y al menos una mejora en el carrito para avanzar al checkout.')
       return
     }
 
     if (!user.email) {
-      setPurchaseMessage('No pudimos confirmar la compra porque tu cuenta no tiene un correo válido.')
+      setPurchaseMessage('No pudimos iniciar el checkout porque tu cuenta no tiene un correo válido.')
       return
     }
 
     try {
       await createPurchaseOrder(db, user.uid, user.email, cart)
-      await addNotification(db, 'Compra en revisión', 'Tu pedido fue enviado para revisión', {
+      await addNotification(db, 'Checkout iniciado', 'Tu pedido fue enviado a checkout para revisión', {
         email: user.email,
         total: String(cartTotal),
       })
       setCart([])
-      setPurchaseMessage('Compra preconfirmada. Tu orden quedó registrada.')
+      setIsCartOpen(false)
+      setPurchaseMessage('Checkout iniciado. Tu pedido quedó registrado y listo para seguimiento.')
     } catch {
-      setPurchaseMessage('No pudimos guardar la orden. Vuelve a intentarlo en unos minutos.')
+      setPurchaseMessage('No pudimos iniciar el checkout. Volvé a intentarlo en unos minutos.')
     }
   }
 
   return {
     addToCart,
     cart,
+    cartCount,
     cartTotal,
-    confirmPurchase,
+    checkout,
+    closeCart,
+    decreaseQuantity,
+    increaseQuantity,
+    isCartOpen,
+    openCart,
     purchaseMessage,
+    removeFromCart,
     setPurchaseMessage,
   }
 }
