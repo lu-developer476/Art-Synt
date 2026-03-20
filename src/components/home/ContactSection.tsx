@@ -27,11 +27,10 @@ export default function ContactSection({
     <section className="rounded-3xl border border-purple-400/50 bg-gradient-to-br from-purple-950/80 via-black/70 to-slate-900/70 p-6">
       <h2 className="text-2xl font-semibold text-purple-100">Contacto</h2>
       <p className="mt-2 text-sm text-purple-200">
-        ¿Querés formar parte de nuestra red? Buscamos talentos para desarrollo de implantes,
-        operaciones de campo y seguridad corporativa en los distritos de Night City.
+        ¿Buscando se parte de nuestra red? Necesitamos talentos para desarrollo de implantes, operaciones de campo y seguridad corporativa en los distritos de Night City.
       </p>
       <div className="mt-4 rounded-2xl border border-cyan-400/30 bg-cyan-950/20 p-4 text-sm text-cyan-100">
-        Tu postulación ahora dispara un envío real por Nodemailer: notifica al equipo y te devuelve una confirmación automática en tu casilla.
+        Tu solicitud es remitida por Nodemailer: notifica al equipo y te devuelve una respuesta automatizada a tu correo registrado.
       </div>
       <form className="mt-4 grid gap-4 md:grid-cols-2" onSubmit={(event) => void onSubmit(event)}>
         <label className="text-sm text-purple-100">
