@@ -88,7 +88,7 @@ export default function AccessSection({
             />
           </label>
           <div className="rounded-2xl border border-purple-400/40 bg-black/20 p-4 text-xs leading-6 text-purple-200">
-            Después del alta le enviaremos un correo real con Nodemailer y un enlace seguro gestionado por Firebase.
+            Luego del alta enviaremos un correo de Nodemailer con el enlace seguro gestionado por Firebase.
           </div>
           <div className="flex flex-wrap gap-3">
             <button
@@ -120,7 +120,7 @@ export default function AccessSection({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm">
           <div className="w-full max-w-lg rounded-3xl border border-cyan-400/50 bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 p-6 shadow-[0_0_45px_rgba(34,211,238,0.18)]">
             <p className="text-xs uppercase tracking-[0.35em] text-cyan-300">Cuenta creada</p>
-            <h3 className="mt-3 text-2xl font-semibold text-white">Revisá el correo electrónico registrado</h3>
+            <h3 className="mt-3 text-2xl font-semibold text-white">Verifica el correo electrónico registrado</h3>
             <p className="mt-3 text-sm leading-6 text-purple-100">
               Ya enviamos el correo seguro. El enlace recibido es para habilitar la cuenta y seguir el estado de compra desde nuestra red.
             </p>
