@@ -29,7 +29,7 @@ export default function VerifyEmail() {
 
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           <div className="rounded-3xl border border-purple-400/40 bg-black/30 p-5 text-sm text-purple-100">
-            <p className="font-semibold text-cyan-300">Qué deberías ver en tu mail</p>
+            <p className="font-semibold text-cyan-300">Pasos para el chequeo</p>
             <ul className="mt-3 list-disc space-y-2 pl-5 leading-6 text-purple-200">
               <li>Un correo emitido por Firebase Authentication.</li>
               <li>Un correo adicional de A/S Nexus con Nodemailer para guiar el proceso.</li>
@@ -37,7 +37,7 @@ export default function VerifyEmail() {
             </ul>
           </div>
           <div className="rounded-3xl border border-purple-400/40 bg-black/30 p-5 text-sm text-purple-100">
-            <p className="font-semibold text-cyan-300">Siguiente acción</p>
+            <p className="font-semibold text-cyan-300">A tener en cuenta:</p>
             <p className="mt-3 leading-6 text-purple-200">
               Si ya validaste el correo, regresa a Acceso y tu login queda habilitado. Si no lo hiciste, vuelve a ingresar a tu casilla de mail registrado con el enlace pendiente.
             </p>
