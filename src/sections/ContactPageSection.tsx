@@ -15,7 +15,7 @@ export default function ContactPageSection() {
     setContactMessage(null)
 
     if (contactDescription.trim().length < 20) {
-      setContactMessage('Tu presentación debe tener al menos 20 caracteres para poder evaluarla.')
+      setContactMessage('El formulario debe ser claro y extenso para poder evaluarlo adecuadamente.')
       return
     }
 
@@ -41,16 +41,16 @@ export default function ContactPageSection() {
         },
       })
 
-      await addNotification(db, 'Nueva postulación', 'Se recibió una solicitud para unirse a la red', {
+      await addNotification(db, 'Nueva solicitud', 'Se ha recibido la solicitud para unirse a nuestra red', {
         email: contactEmail,
       })
 
       setContactName('')
       setContactEmail('')
       setContactDescription('')
-      setContactMessage('Postulación enviada con éxito. También te mandamos un correo de confirmación para que tengas constancia inmediata.')
+      setContactMessage('Solicitud enviada. También te mandamos un correo confirmando tu constancia inmediata.')
     } catch {
-      setContactMessage('No pudimos enviar tu postulación. Intentá nuevamente en unos minutos.')
+      setContactMessage('No se ha podido, por favor, intentalo nuevamente en unos minutos.')
     } finally {
       setIsSubmitting(false)
     }
