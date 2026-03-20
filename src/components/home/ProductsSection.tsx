@@ -55,7 +55,7 @@ export default function ProductsSection({
           <div>
             <h2 className="text-2xl font-semibold text-purple-100">Productos</h2>
             <p className="mt-1 text-sm text-purple-200">
-              Revisá cada mejora, personalizá tu pedido y autorizá la compra cuando estés listo.
+              Nuevas mejoras y pedidos personalizados a tu alcance.
             </p>
           </div>
           <button
